@@ -1,6 +1,6 @@
 <?php
-	class images extends baseModel {
-		
+	class model extends baseModel {
+		// All table columns
 		public $id; // int
 		public $name; // string (64)
 		public $size; // int

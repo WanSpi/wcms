@@ -53,7 +53,7 @@
 		foreach($ctrl -> models as $val) {
 			include app_path . "/app/models/" . $val . ".php";
 		}
-		$vars = $ctrl -> init();
+		$data = $ctrl -> init();
 		if($ctrl -> view) {
 			function content($data) {
 				include app_path . "/views/" . controller . ".html";
@@ -61,8 +61,4 @@
 			include app_path . "/templates/" . $ctrl -> template . ".html";
 		}
 	}
-	
-	//$a=new mysql();
-	//include app_path . "/app/models/products.php";
-	//print_r(products::findFirst());
 ?>

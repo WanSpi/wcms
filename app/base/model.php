@@ -1,24 +1,15 @@
 <?php
 	class baseModel {
 		
-		public function __construct() {
-			foreach($this as $key => $value) {
-				$value = "a";
-			}
-			//print_r($this);
+		private $n;
+		
+		public function __construct($n = true) {
+			$this -> n = $n;
 		}
 		
 		public function save() {
 			$model = get_called_class();
-			if($this -> id) {
-				$col = "";
-				foreach($this as $key => $value) {
-					if($key !== "id") {
-						$col .= ($col === "" ? "" : ",") . "`$key`='$value'";
-					}
-				}
-				$sql = "UPDATE `$model` SET $col WHERE `id` = " . $this -> id;
-			} else {
+			if($this -> n) {
 				$col = $val = "";
 				
 				foreach($this as $key => $value) {
@@ -29,6 +20,14 @@
 				}
 				
 				$sql = "INSERT INTO `$model` ($col) values ($val)";
+			} else {
+				$col = "";
+				foreach($this as $key => $value) {
+					if($key !== "id") {
+						$col .= ($col === "" ? "" : ",") . "`$key`='$value'";
+					}
+				}
+				$sql = "UPDATE `$model` SET $col WHERE `id` = " . $this -> id;
 			}
 			mysql::query($sql);
 		}
@@ -60,7 +59,7 @@
 					$res -> data_seek($i);
 					$row = $res -> fetch_assoc();
 					
-					$class = new $model();
+					$class = new $model(false);
 					
 					foreach($class as $key => &$val) {
 						$val = $row[$key];
