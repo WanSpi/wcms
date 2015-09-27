@@ -14,17 +14,28 @@
 			$url = $_GET['url'];
 			while(true) {
 				if(file_exists(app_path . "/app/controllers/" . $url . ".php")) {
-					return $url;
+					return array(
+						"controller" => $url,
+						"dir" => "/" . $url
+					);
 				}
 				if(file_exists(app_path . "/app/controllers/" . $url . "/index.php")) {
-					return $url . "/index";
+					return array(
+						"controller" => $url . "/index",
+						"dir" => "/" . $url
+					);
 				}
 				if(!isset($urlArr)) {
 					$urlArr = preg_split("/[\/]+/", $url);
 				}
 				$count = count($urlArr);
 				if($count === 1) {
-					return false;
+					if(file_exists(app_path . "/app/controllers/index.php")) {
+						return array(
+							"controller" => "index",
+							"dir" => "/"
+						);
+					}
 				}
 				unset($urlArr[$count - 1]);
 				$url = "";
@@ -32,12 +43,19 @@
 					$url .= ($i === 0 ? "" : "/") . $urlArr[$i];
 				}
 			}
-		} else {
-			define("controller", "index");
+		}
+		
+		if(file_exists(app_path . "/app/controllers/index.php")) {
+			return array(
+				"controller" => "index",
+				"dir" => "/"
+			);
 		}
 	}
 	
-	define("controller", getController());
+	$path = getController();
+	define("controller", $path["controller"]);
+	define("controller_path", $path["dir"]);
 	
 	if(!controller) {
 		error(404);
@@ -45,6 +63,7 @@
 		include app_path . "/app/base/myslq.php";
 		include app_path . "/app/base/controller.php";
 		include app_path . "/app/base/model.php";
+		include app_path . "/app/base/filters.php";
 		
 		mysql::connect();
 		

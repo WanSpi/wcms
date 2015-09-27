@@ -19,7 +19,7 @@
 		}
 		
 		protected function uploadImage($image) {
-			preg_match ("/\/(.+)/" , $image["type"], $type);
+			preg_match("/\/(.+)/" , $image["type"], $type);
 			
 			$rand = rand(100000, 999999) . "";
 			$l = strlen($rand);
@@ -38,6 +38,24 @@
 			move_uploaded_file($file["tmp_name"], $url);
 			
 			return $url;
+		}
+		protected function getDataUrl($array) {
+			$url = "";
+			$c1 = strlen(controller_path) - 1;
+			$c2 = strlen($_GET['url']);
+			for($i = $c1; $i !== $c2; $i++) {
+				if($i === $c1 && $_GET['url'][$i] === "/") {
+					continue;
+				}
+				$url .= $_GET['url'][$i];
+			}
+			$data = preg_split("/[\/]+/", $url);
+			$dataReturn = array();
+			$c1 = count($array);
+			for($i = 0; $i !== $c1; $i++) {
+				$dataReturn[$array[$i]] = $data[$i];
+			}
+			return $dataReturn;
 		}
 		
 	}
